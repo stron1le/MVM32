@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://c4dqnpbm8m48x"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4v71b"]
+
+[node name="ControllablePlayer" type="CharacterBody3D" unique_id=820173823]
+
+[node name="PlayerCollisionBody" type="CollisionShape3D" parent="." unique_id=1392015527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_4v71b")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1165482993]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
