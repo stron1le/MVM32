@@ -10,12 +10,15 @@
 [node name="ControllablePlayer" parent="." unique_id=820173823 instance=ExtResource("2_s310s")]
 script = ExtResource("3_wytjs")
 
-[node name="CameraPivot" type="SpringArm3D" parent="ControllablePlayer" unique_id=466425482]
+[node name="CameraYaw" type="Node3D" parent="ControllablePlayer" unique_id=732032098]
+
+[node name="CameraPivot" type="SpringArm3D" parent="ControllablePlayer/CameraYaw" unique_id=466425482]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9360476, 0)
+collision_mask = 2
 spring_length = 5.0
 script = ExtResource("3_0q7u2")
 
-[node name="PlayerCam" type="Camera3D" parent="ControllablePlayer/CameraPivot" unique_id=1218804514]
+[node name="PlayerCam" type="Camera3D" parent="ControllablePlayer/CameraYaw/CameraPivot" unique_id=1218804514]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1720368549]
 transform = Transform3D(0.7451502, 0.21880338, -0.62998116, 0, 0.9446458, 0.32809186, 0.6668967, -0.24447772, 0.703903, 0, 0, 0)
