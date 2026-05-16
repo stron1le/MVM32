@@ -1,17 +1,18 @@
 [gd_scene format=3 uid="uid://c586vyifhtdia"]
 
-[ext_resource type="PackedScene" uid="uid://jbf1de1wbik1" path="res://Scenes/LevelScenes/TestArea.glb" id="1_441dt"]
 [ext_resource type="PackedScene" uid="uid://c4dqnpbm8m48x" path="res://Scenes/PlayerScenes/controllable_player.tscn" id="2_s310s"]
+[ext_resource type="PackedScene" uid="uid://bqm71ssckevfm" path="res://Scenes/PlayerScenes/test_area_map.tscn" id="3_rypfn"]
+[ext_resource type="Script" uid="uid://c2ktiu5qco17l" path="res://Scripts/controllable_player.gd" id="3_wytjs"]
 
 [node name="TestScene" type="Node3D" unique_id=1753993841]
 
-[node name="TestArea" parent="." unique_id=1642116 instance=ExtResource("1_441dt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.950673, 0, -0.3559127)
-
 [node name="ControllablePlayer" parent="." unique_id=820173823 instance=ExtResource("2_s310s")]
+script = ExtResource("3_wytjs")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1218804514]
 transform = Transform3D(1, 0, 0, 0, 0.7664706, 0.6422794, 0, -0.6422794, 0.7664706, 0, 11.912703, 8.126932)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1720368549]
 transform = Transform3D(0.7451502, 0.21880338, -0.62998116, 0, 0.9446458, 0.32809186, 0.6668967, -0.24447772, 0.703903, 0, 0, 0)
+
+[node name="TestArea" parent="." unique_id=1642116 instance=ExtResource("3_rypfn")]
