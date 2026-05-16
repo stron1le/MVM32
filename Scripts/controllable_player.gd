@@ -5,6 +5,7 @@ const SPEED = 5.0
 const ACCEL = 10.0;
 const BRAKE = 5.0;
 const JUMP_VELOCITY = 4.5
+@export_range(0,360) var gamepad_sensitivity = 180;
 @export_range(0.0, 1.0) var mouse_sensitivity = 0.01
 @export var tilt_limit = deg_to_rad(75)
 @onready var _camera := $CameraYaw/CameraPivot/PlayerCam as Camera3D
@@ -28,7 +29,6 @@ func _physics_process(delta):
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -44,4 +44,10 @@ func _physics_process(delta):
 		currentMovement=currentMovement.move_toward(Vector3.ZERO,BRAKE*delta);
 		velocity.x=currentMovement.x;
 		velocity.z=currentMovement.z;
+	var cam_dir=Input.get_vector("ui_cam_left","ui_cam_right","ui_cam_up","ui_cam_down");
+	if cam_dir:
+		_camera_yaw.rotation.y -= deg_to_rad(cam_dir.x*gamepad_sensitivity*delta);
+		# Prevent the camera from rotating too far up or down.
+		_camera_pivot.rotation.x += deg_to_rad(cam_dir.y*gamepad_sensitivity*delta);
+		_camera_pivot.rotation.x = clampf(_camera_pivot.rotation.x, -tilt_limit, tilt_limit)
 	move_and_slide()
