@@ -1,8 +1,13 @@
 [gd_scene format=3 uid="uid://c4dqnpbm8m48x"]
 
+[ext_resource type="Script" uid="uid://c2ktiu5qco17l" path="res://Scripts/controllable_player.gd" id="1_aeidn"]
+[ext_resource type="PackedScene" uid="uid://bptpvlss8lxib" path="res://Scenes/PlayerScenes/edge_checker.tscn" id="2_7788y"]
+[ext_resource type="Script" uid="uid://bq0q6vo4irkuk" path="res://Scenes/PlayerScenes/edge_checker.gd" id="3_q03ge"]
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4v71b"]
 
 [node name="ControllablePlayer" type="CharacterBody3D" unique_id=820173823]
+script = ExtResource("1_aeidn")
 
 [node name="PlayerCollisionBody" type="CollisionShape3D" parent="." unique_id=1392015527]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -10,3 +15,24 @@ shape = SubResource("CapsuleShape3D_4v71b")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=1165482993]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="EdgeChecker" parent="." unique_id=1135314095 instance=ExtResource("2_7788y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("3_q03ge")
+
+[node name="BelowCast" type="RayCast3D" parent="EdgeChecker" unique_id=291745900]
+target_position = Vector3(0, 0, -3)
+collision_mask = 2
+
+[node name="AboveCast" type="RayCast3D" parent="EdgeChecker" unique_id=499875454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -3)
+collision_mask = 2
+
+[node name="DownCast" type="RayCast3D" parent="EdgeChecker" unique_id=1842754469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.55518174)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="EdgeChecker" unique_id=1069629240]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.4518688)
+
+[connection signal="edgeDetected" from="EdgeChecker" to="." method="_on_edge_checker_edge_detected"]
