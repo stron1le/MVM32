@@ -68,7 +68,13 @@ func _physics_process(delta):
 func _on_edge_checker_edge_detected(forwardDirection):
 	if !is_on_floor() and velocity.y<0:
 		var savedPosition=global_position;
-		move_and_collide(forwardDirection);
+		var collisionInfo = move_and_collide(forwardDirection);
+		if (collisionInfo):
+			print(collisionInfo);
+			if (collisionInfo.get_normal().y!=0):
+				global_position=savedPosition;
+				return;
+			$EdgeChecker.look_at($EdgeChecker.global_position-collisionInfo.get_normal())
 		$EdgeChecker/DownCast.force_raycast_update();
 		if ($EdgeChecker/DownCast.is_colliding()):
 			velocity=Vector3.ZERO;
