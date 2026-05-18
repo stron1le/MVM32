@@ -17,6 +17,7 @@ func _physics_process(delta):
 			# Handle jump.
 			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 				velocity.y = JUMP_VELOCITY
+				
 			# Get the input direction and handle the movement/deceleration.
 			# As good practice, you should replace UI actions with custom gameplay actions.
 			var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -35,6 +36,29 @@ func _physics_process(delta):
 				velocity.x=currentMovement.x;
 				velocity.z=currentMovement.z;
 			move_and_slide()
+			if (!is_on_floor()):
+				state="Airborne";
+				return;
+		"Airborne":
+			var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+			var moveTransform = get_cam_transform();
+			var target_direction = (moveTransform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+			if target_direction:
+				var currentMovement:Vector3 = Vector3(velocity.x,0,velocity.z);
+				var targetMovement=target_direction*SPEED;
+				currentMovement=currentMovement.move_toward(targetMovement,ACCEL*delta);
+				velocity.x=currentMovement.x;
+				velocity.z=currentMovement.z;
+				$EdgeChecker.look_at($EdgeChecker.global_position+target_direction.normalized());
+			else:
+				var currentMovement:Vector3 = Vector3(velocity.x,0,velocity.z);
+				currentMovement=currentMovement.move_toward(Vector3.ZERO,BRAKE*delta);
+				velocity.x=currentMovement.x;
+				velocity.z=currentMovement.z;
+			move_and_slide()
+			if (is_on_floor()):
+				state="Grounded";
+				return;
 		"LedgeGrab":
 			if Input.is_action_just_pressed("ui_accept"):
 				velocity.y = JUMP_VELOCITY
