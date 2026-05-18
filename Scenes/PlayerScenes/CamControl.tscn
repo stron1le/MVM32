@@ -3,11 +3,11 @@
 [ext_resource type="Script" uid="uid://cujaw4m54eabp" path="res://Scripts/player_cam.gd" id="1_ywmey"]
 
 [node name="CameraYaw" type="Node3D" unique_id=1543028921]
+script = ExtResource("1_ywmey")
 
 [node name="CameraPivot" type="SpringArm3D" parent="." unique_id=326066482]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9360476, 0)
 collision_mask = 2
 spring_length = 5.0
-script = ExtResource("1_ywmey")
 
 [node name="PlayerCam" type="Camera3D" parent="CameraPivot" unique_id=1029801084]

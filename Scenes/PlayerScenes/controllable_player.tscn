@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c2ktiu5qco17l" path="res://Scripts/controllable_player.gd" id="1_aeidn"]
 [ext_resource type="PackedScene" uid="uid://bptpvlss8lxib" path="res://Scenes/PlayerScenes/edge_checker.tscn" id="2_7788y"]
 [ext_resource type="Script" uid="uid://bq0q6vo4irkuk" path="res://Scenes/PlayerScenes/edge_checker.gd" id="3_q03ge"]
+[ext_resource type="PackedScene" uid="uid://doi2fv47h547o" path="res://Scenes/PlayerScenes/CamControl.tscn" id="4_xd0lf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4v71b"]
 
@@ -34,5 +35,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.55518174)
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="EdgeChecker" unique_id=1069629240]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+
+[node name="CameraYaw" parent="." unique_id=1543028921 node_paths=PackedStringArray("target") instance=ExtResource("4_xd0lf")]
+target = NodePath("../Focus")
+
+[node name="Focus" type="Node3D" parent="." unique_id=1103734915]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4504855, 0)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Focus" unique_id=477640717]
 
 [connection signal="edgeDetected" from="EdgeChecker" to="." method="_on_edge_checker_edge_detected"]

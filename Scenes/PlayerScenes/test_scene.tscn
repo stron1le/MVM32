@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://c586vyifhtdia"]
 
 [ext_resource type="PackedScene" uid="uid://c4dqnpbm8m48x" path="res://Scenes/PlayerScenes/controllable_player.tscn" id="2_s310s"]
-[ext_resource type="PackedScene" uid="uid://doi2fv47h547o" path="res://Scenes/PlayerScenes/CamControl.tscn" id="3_0q7u2"]
 [ext_resource type="PackedScene" uid="uid://bqm71ssckevfm" path="res://Scenes/PlayerScenes/test_area_map.tscn" id="3_rypfn"]
 
 [node name="TestScene" type="Node3D" unique_id=1753993841]
 
 [node name="ControllablePlayer" parent="." unique_id=820173823 instance=ExtResource("2_s310s")]
 
-[node name="CameraYaw" parent="ControllablePlayer" unique_id=1543028921 instance=ExtResource("3_0q7u2")]
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1720368549]
 transform = Transform3D(0.7451502, 0.21880338, -0.62998116, 0, 0.9446458, 0.32809186, 0.6668967, -0.24447772, 0.703903, 0, 0, 0)
 
 [node name="TestArea" parent="." unique_id=1642116 instance=ExtResource("3_rypfn")]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=436359884]
+transform = Transform3D(1, 0, 0, 0, 0.67814684, 0.7349264, 0, -0.7349264, 0.67814684, 0, 23.964058, 18.094028)
