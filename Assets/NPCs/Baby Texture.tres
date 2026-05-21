@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cigg8ji6giri1"]
+
+[ext_resource type="Texture2D" uid="uid://kntmgymcm28n" path="res://Assets/NPCs/Village NPC 01_Village NPC 01.png" id="1_0667d"]
+
+[resource]
+resource_name = "Baby Texture"
+cull_mode = 2
+albedo_color = Color(0, 0, 0, 1)
+metallic = 1.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_operator = 1
+emission_texture = ExtResource("1_0667d")
+texture_filter = 0
