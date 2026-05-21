@@ -7,47 +7,22 @@ const BRAKE = 5.0;
 const JUMP_VELOCITY = 8
 
 var state="Grounded";
-var viewState="FP";
+var viewState="TP";
 var canDropSpeed=false;
+var storedViewState="TP";
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		if state!="LedgeGrab":
 			velocity += get_gravity() * delta
+	if Player_Cam:
+		var spring = Player_Cam.singleton._camera_pivot as SpringArm3D;
+		spring.spring_length=(0 if viewState=="FP" else 5);
 	match(state):
 		"Grounded":
-			canDropSpeed=true;
+			ground_logic(delta);
 			if (Input.is_action_just_pressed("Swapped")):
-				viewState=("FP" if viewState=="TP" else "TP");
-				print(viewState);
-			if Player_Cam:
-				var spring = Player_Cam.singleton._camera_pivot as SpringArm3D;
-				spring.spring_length=(0 if viewState=="FP" else 5);
-			# Handle jump.
-			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-				velocity.y = JUMP_VELOCITY
-				
-			# Get the input direction and handle the movement/deceleration.
-			# As good practice, you should replace UI actions with custom gameplay actions.
-			var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-			var moveTransform = get_cam_transform();
-			var target_direction = (moveTransform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-			if target_direction:
-				var currentMovement:Vector3 = Vector3(velocity.x,0,velocity.z);
-				var targetMovement=target_direction*SPEED;
-				currentMovement=currentMovement.move_toward(targetMovement,ACCEL*delta);
-				velocity.x=currentMovement.x;
-				velocity.z=currentMovement.z;
-				$EdgeChecker.look_at($EdgeChecker.global_position+target_direction.normalized());
-			else:
-				var currentMovement:Vector3 = Vector3(velocity.x,0,velocity.z);
-				currentMovement=currentMovement.move_toward(Vector3.ZERO,BRAKE*delta);
-				velocity.x=currentMovement.x;
-				velocity.z=currentMovement.z;
-			move_and_slide()
-			if (!is_on_floor()):
-				state="Airborne";
-				return;
+				enter_grapple_mode();
 		"Airborne":
 			var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 			var moveTransform = get_cam_transform();
@@ -81,7 +56,9 @@ func _physics_process(delta):
 				if (target_direction and target_direction.angle_to(-$EdgeChecker.basis.z)>deg_to_rad(150)):
 					velocity.y=0;
 					state="Grounded";
-					print("Exit");
+		"Grapple Aim":
+			grapple_logic(delta);
+			
 func _on_edge_checker_edge_detected(forwardDirection):
 	if !is_on_floor() and velocity.y<0:
 		var savedPosition=global_position;
@@ -113,3 +90,46 @@ func get_cam_transform():
 		newCamBasis=newCamBasis.orthonormalized();
 		newTransform.basis=newCamBasis;
 		return newTransform;
+func ground_logic(delta):
+	canDropSpeed=true;
+	# Handle jump.
+	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var moveTransform = get_cam_transform();
+	var target_direction = (moveTransform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if target_direction:
+		var currentMovement:Vector3 = Vector3(velocity.x,0,velocity.z);
+		var targetMovement=target_direction*SPEED;
+		currentMovement=currentMovement.move_toward(targetMovement,ACCEL*delta);
+		velocity.x=currentMovement.x;
+		velocity.z=currentMovement.z;
+		$EdgeChecker.look_at($EdgeChecker.global_position+target_direction.normalized());
+	else:
+		var currentMovement:Vector3 = Vector3(velocity.x,0,velocity.z);
+		currentMovement=currentMovement.move_toward(Vector3.ZERO,BRAKE*delta);
+		velocity.x=currentMovement.x;
+		velocity.z=currentMovement.z;
+	move_and_slide()
+	if (!is_on_floor()):
+		state="Airborne";
+		return;
+func grapple_logic(delta):
+	ground_logic(delta);
+	if (Input.is_action_just_pressed("Swapped")):
+		state="Grounded";
+	if (state=="Grapple Aim"):
+		Player_Cam.singleton.canShowCursor=true;
+	else:
+		exit_grapple_mode();
+func enter_grapple_mode():
+	storedViewState=viewState;
+	print(storedViewState);
+	viewState="FP";
+	state="Grapple Aim";
+func exit_grapple_mode():
+	Player_Cam.singleton.canShowCursor=false;
+	viewState=storedViewState;
