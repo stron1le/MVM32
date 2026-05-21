@@ -7,6 +7,7 @@ const BRAKE = 5.0;
 const JUMP_VELOCITY = 8
 
 var state="Grounded";
+var viewState="FP";
 var canDropSpeed=false;
 func _physics_process(delta):
 	# Add the gravity.
@@ -16,6 +17,12 @@ func _physics_process(delta):
 	match(state):
 		"Grounded":
 			canDropSpeed=true;
+			if (Input.is_action_just_pressed("Swapped")):
+				viewState=("FP" if viewState=="TP" else "TP");
+				print(viewState);
+			if Player_Cam:
+				var spring = Player_Cam.singleton._camera_pivot as SpringArm3D;
+				spring.spring_length=(0 if viewState=="FP" else 5);
 			# Handle jump.
 			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 				velocity.y = JUMP_VELOCITY
