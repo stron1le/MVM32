@@ -7,6 +7,7 @@ const BRAKE = 5.0;
 const JUMP_VELOCITY = 8
 
 var state="Grounded";
+var canDropSpeed=false;
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
@@ -14,6 +15,7 @@ func _physics_process(delta):
 			velocity += get_gravity() * delta
 	match(state):
 		"Grounded":
+			canDropSpeed=true;
 			# Handle jump.
 			if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 				velocity.y = JUMP_VELOCITY
@@ -55,11 +57,14 @@ func _physics_process(delta):
 				currentMovement=currentMovement.move_toward(Vector3.ZERO,BRAKE*delta);
 				velocity.x=currentMovement.x;
 				velocity.z=currentMovement.z;
+			if (canDropSpeed and Input.is_action_just_released("ui_accept")):
+				velocity.y=min(velocity.y,velocity.y*0.5);
 			move_and_slide()
 			if (is_on_floor()):
 				state="Grounded";
 				return;
 		"LedgeGrab":
+			canDropSpeed=true;
 			if Input.is_action_just_pressed("ui_accept"):
 				velocity.y = JUMP_VELOCITY
 				state="Grounded";
